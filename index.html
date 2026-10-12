@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fokus – To-Do</title>
+  <title>To-Do</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
@@ -14,7 +14,7 @@
   <!-- ============ AUTH ============ -->
   <section id="auth-view" class="auth hidden">
     <div class="auth-card">
-      <div class="brand big"><span class="brand-dot"></span>Fokus</div>
+      <div class="brand big"><span class="brand-dot"></span>To-Do</div>
       <p class="auth-sub">Deine Aufgaben. Deine Zahlen. Dein Rhythmus.</p>
 
       <div class="tabs" role="tablist">
@@ -23,6 +23,10 @@
       </div>
 
       <form id="auth-form" class="auth-form">
+        <!-- Nur beim Registrieren sichtbar (wird in script.js ein-/ausgeblendet) -->
+        <label id="username-feld" class="hidden">Nutzername
+          <input type="text" id="auth-username" maxlength="30" autocomplete="nickname" />
+        </label>
         <label>E-Mail
           <input type="email" id="auth-email" required autocomplete="email" />
         </label>
@@ -38,7 +42,7 @@
   <!-- ============ APP ============ -->
   <div id="app-view" class="app hidden">
     <header class="topbar">
-      <div class="brand"><span class="brand-dot"></span>Fokus</div>
+      <div class="brand"><span class="brand-dot"></span>To-Do</div>
       <div class="greeting">
         <span id="greeting-text">Hallo</span>
         <span class="muted" id="today-text"></span>
@@ -71,7 +75,7 @@
       <article class="card kpi accent">
         <span class="kpi-label">Streak</span>
         <span class="kpi-value"><span id="stat-streak">0</span><small> Tage</small></span>
-        <span class="kpi-hint" id="stat-best">Rekord: 0</span>
+        <span class="kpi-hint">Tage in Folge etwas erledigt</span>
       </article>
 
       <article class="card kpi">
@@ -153,6 +157,8 @@
   <div id="loader" class="loader"><span></span></div>
   <div id="toast" class="toast"></div>
 
-  <script type="module" src="script.js"></script>
+  <!-- 1. Zuerst die Supabase-Bibliothek laden, 2. danach unseren eigenen Code -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
 </body>
 </html>
