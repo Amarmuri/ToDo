@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fokus – To-Do</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%23ff5a36'/><path d='M30 52l14 14 26-30' stroke='white' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+</head>
+<body>
+  <!-- ============ AUTH ============ -->
+  <section id="auth-view" class="auth hidden">
+    <div class="auth-card">
+      <div class="brand big"><span class="brand-dot"></span>Fokus</div>
+      <p class="auth-sub">Deine Aufgaben. Deine Zahlen. Dein Rhythmus.</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-mode="login" type="button">Anmelden</button>
+        <button class="tab" data-mode="signup" type="button">Registrieren</button>
+      </div>
+
+      <form id="auth-form" class="auth-form">
+        <label>E-Mail
+          <input type="email" id="auth-email" required autocomplete="email" />
+        </label>
+        <label>Passwort
+          <input type="password" id="auth-password" required minlength="6" autocomplete="current-password" />
+        </label>
+        <button type="submit" class="btn primary" id="auth-submit">Anmelden</button>
+        <p id="auth-msg" class="auth-msg"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ APP ============ -->
+  <div id="app-view" class="app hidden">
+    <header class="topbar">
+      <div class="brand"><span class="brand-dot"></span>Fokus</div>
+      <div class="greeting">
+        <span id="greeting-text">Hallo</span>
+        <span class="muted" id="today-text"></span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="theme-toggle" title="Hell/Dunkel umschalten" aria-label="Theme umschalten">◐</button>
+        <button class="btn ghost" id="logout-btn">Abmelden</button>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <section class="stats-grid">
+      <article class="card ring-card">
+        <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="ring-bg" cx="60" cy="60" r="50" />
+          <circle class="ring-fg" id="ring-fg" cx="60" cy="60" r="50" />
+        </svg>
+        <div class="ring-label">
+          <span class="ring-value" id="stat-rate">0%</span>
+          <span class="muted small">erledigt</span>
+        </div>
+      </article>
+
+      <article class="card kpi">
+        <span class="kpi-label">Offen</span>
+        <span class="kpi-value" id="stat-open">0</span>
+        <span class="kpi-hint" id="stat-today-due">0 heute fällig</span>
+      </article>
+
+      <article class="card kpi accent">
+        <span class="kpi-label">Streak</span>
+        <span class="kpi-value"><span id="stat-streak">0</span><small> Tage</small></span>
+        <span class="kpi-hint" id="stat-best">Rekord: 0</span>
+      </article>
+
+      <article class="card kpi">
+        <span class="kpi-label">Überfällig</span>
+        <span class="kpi-value warn" id="stat-overdue">0</span>
+        <span class="kpi-hint" id="stat-avg">Ø Erledigungszeit: –</span>
+      </article>
+
+      <article class="card chart-card week">
+        <div class="card-head">
+          <h3>Letzte 7 Tage</h3>
+          <div class="legend"><span class="lg created"></span>neu <span class="lg done"></span>erledigt</div>
+        </div>
+        <div class="bars" id="week-bars"></div>
+      </article>
+
+      <article class="card chart-card heat">
+        <div class="card-head">
+          <h3>Aktivität · 6 Monate</h3>
+          <span class="muted small" id="heat-total">0 erledigt</span>
+        </div>
+        <div class="heatmap" id="heatmap"></div>
+      </article>
+
+      <article class="card chart-card cats">
+        <div class="card-head"><h3>Kategorien</h3></div>
+        <div id="cat-list" class="cat-list"></div>
+      </article>
+    </section>
+
+    <!-- Todo area -->
+    <section class="card todo-panel">
+      <form id="todo-form" class="todo-form">
+        <input id="todo-title" type="text" placeholder="Was steht an?" maxlength="300" required autocomplete="off" />
+        <div class="todo-form-row">
+          <input id="todo-category" list="category-options" placeholder="Kategorie" maxlength="40" />
+          <datalist id="category-options"></datalist>
+          <div class="prio-picker" role="radiogroup" aria-label="Priorität">
+            <label><input type="radio" name="prio" value="1" /><span class="p p1">Niedrig</span></label>
+            <label><input type="radio" name="prio" value="2" checked /><span class="p p2">Mittel</span></label>
+            <label><input type="radio" name="prio" value="3" /><span class="p p3">Hoch</span></label>
+          </div>
+          <input id="todo-due" type="date" aria-label="Fälligkeitsdatum" />
+          <button class="btn primary" type="submit">+ Hinzufügen</button>
+        </div>
+      </form>
+
+      <div class="toolbar">
+        <div class="filters" id="filters">
+          <button class="chip active" data-filter="all">Alle</button>
+          <button class="chip" data-filter="open">Offen</button>
+          <button class="chip" data-filter="today">Heute</button>
+          <button class="chip" data-filter="overdue">Überfällig</button>
+          <button class="chip" data-filter="done">Erledigt</button>
+        </div>
+        <div class="toolbar-right">
+          <input id="search" type="search" placeholder="Suchen…" />
+          <select id="sort">
+            <option value="smart">Smart</option>
+            <option value="due">Fälligkeit</option>
+            <option value="prio">Priorität</option>
+            <option value="new">Neueste</option>
+          </select>
+        </div>
+      </div>
+
+      <ul id="todo-list" class="todo-list"></ul>
+      <div id="empty" class="empty hidden">
+        <div class="empty-mark">✓</div>
+        <p>Nichts zu sehen hier. Zeit für eine Pause – oder eine neue Aufgabe.</p>
+      </div>
+      <div class="list-footer">
+        <span class="muted small" id="list-count"></span>
+        <button class="btn ghost small" id="clear-done">Erledigte löschen</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="loader" class="loader"><span></span></div>
+  <div id="toast" class="toast"></div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
